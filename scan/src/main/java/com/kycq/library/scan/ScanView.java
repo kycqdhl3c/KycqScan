@@ -86,6 +86,15 @@ public class ScanView extends FrameLayout implements SurfaceHolder.Callback {
 		}
 	}
 	
+	public void restartScan() {
+		if (this.cameraManager == null || !this.cameraManager.isOpened()
+				|| this.captureHandler == null) {
+			startScan();
+		} else {
+			this.captureHandler.restartPreviewAndDecode();
+		}
+	}
+	
 	private void initCamera(SurfaceHolder surfaceHolder) {
 		if (this.cameraManager.isOpened()) {
 			return;

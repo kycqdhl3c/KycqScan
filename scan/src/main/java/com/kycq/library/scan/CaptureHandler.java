@@ -43,7 +43,7 @@ public class CaptureHandler extends Handler {
 		restartPreviewAndDecode();
 	}
 	
-	private void restartPreviewAndDecode() {
+	void restartPreviewAndDecode() {
 		if (this.state == STATE_SUCCESS) {
 			this.state = STATE_PREVIEW;
 			this.cameraManager.requestPreviewFrame(

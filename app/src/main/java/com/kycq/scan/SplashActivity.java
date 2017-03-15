@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.kycq.library.scan.ScanView;
@@ -27,6 +29,21 @@ public class SplashActivity extends AppCompatActivity {
 		});
 		
 		ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.menu, menu);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.restart) {
+			this.dataBinding.scanView.restartScan();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 	
 	@Override
