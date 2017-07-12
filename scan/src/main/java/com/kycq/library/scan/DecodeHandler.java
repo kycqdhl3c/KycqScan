@@ -119,14 +119,21 @@ class DecodeHandler extends Handler {
 		}
 	}
 	
-	private PlanarYUVLuminanceSource buildLuminanceSource(byte[] data, int width, int height) {
+	private PlanarYUVLuminanceSource buildLuminanceSource(byte[] data, int dataWidth, int dataHeight) {
 		Rect rect = this.captureHandler.getPreviewRect();
 		if (rect == null) {
 			return null;
 		}
-		return new PlanarYUVLuminanceSource(data,
-				width, height,
-				rect.left, rect.top, rect.width(), rect.height(), false);
+		if (rect.left + rect.width() <= dataWidth && rect.top + rect.height() <= dataHeight) {
+			return new PlanarYUVLuminanceSource(
+					data, dataWidth, dataHeight,
+					rect.left, rect.top, rect.width(), rect.height(), false);
+		} else if (rect.left + rect.width() <= dataHeight && rect.top + rect.height() <= dataWidth) {
+			return new PlanarYUVLuminanceSource(
+					data, dataHeight, dataWidth,
+					rect.left, rect.top, rect.width(), rect.height(), false);
+		}
+		return null;
 	}
 	
 	private static void bundleThumbnail(PlanarYUVLuminanceSource source, Bundle bundle) {
