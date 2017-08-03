@@ -13,6 +13,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.MultiFormatReader;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.EnumMap;
@@ -27,6 +28,7 @@ public class ScanView extends FrameLayout implements SurfaceHolder.Callback {
 	private CameraManager cameraManager;
 	
 	private CaptureHandler captureHandler;
+	private AlbumHandler albumHandler;
 	
 	private MultiFormatReader multiFormatReader;
 	
@@ -54,6 +56,12 @@ public class ScanView extends FrameLayout implements SurfaceHolder.Callback {
 		//	hints.put(DecodeHintType.CHARACTER_SET, characterSet);
 		//}
 		this.multiFormatReader.setHints(hints);
+		
+		this.albumHandler = new AlbumHandler(this);
+	}
+	
+	public void decode(File file) {
+		this.albumHandler.decode(file);
 	}
 	
 	public void setOnScanListener(OnScanListener listener) {
@@ -142,7 +150,13 @@ public class ScanView extends FrameLayout implements SurfaceHolder.Callback {
 		this.finderView.drawBarcodeView(barcodeBitmap);
 		
 		if (this.onScanListener != null) {
-			this.onScanListener.scanResult(result);
+			this.onScanListener.scanSuccess(result);
+		}
+	}
+	
+	void decodeFailure() {
+		if (this.onScanListener != null) {
+			this.onScanListener.scanFailure();
 		}
 	}
 	
@@ -150,6 +164,9 @@ public class ScanView extends FrameLayout implements SurfaceHolder.Callback {
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 		
+		if (this.cameraManager == null) {
+			return;
+		}
 		Point previewResolution = this.cameraManager.getCameraConfigManager().previewResolution;
 		if (previewResolution == null) {
 			return;
@@ -237,6 +254,8 @@ public class ScanView extends FrameLayout implements SurfaceHolder.Callback {
 	}
 	
 	public interface OnScanListener {
-		void scanResult(String result);
+		void scanSuccess(String result);
+		
+		void scanFailure();
 	}
 }

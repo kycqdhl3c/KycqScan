@@ -64,6 +64,9 @@ public class FinderView extends View {
 	
 	@SuppressWarnings("SuspiciousNameCombination")
 	Rect getFrameRect() {
+		if (this.cameraManager == null) {
+			return null;
+		}
 		Rect frameRect = this.cameraManager.getFrameRect();
 		if (frameRect != null) {
 			return frameRect;

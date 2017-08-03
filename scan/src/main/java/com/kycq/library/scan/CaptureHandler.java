@@ -31,7 +31,7 @@ public class CaptureHandler extends Handler {
 	private final InitLatchThread initLatchThread;
 	private int state;
 	
-	CaptureHandler(ScanView scanView,CameraManager cameraManager) {
+	CaptureHandler(ScanView scanView, CameraManager cameraManager) {
 		this.scanView = scanView;
 		this.cameraManager = cameraManager;
 		
