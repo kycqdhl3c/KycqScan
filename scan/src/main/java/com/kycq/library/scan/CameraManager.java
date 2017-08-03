@@ -45,7 +45,7 @@ class CameraManager implements Camera.PreviewCallback {
 		return this.openCamera != null;
 	}
 	
-	void openDriver(SurfaceHolder surfaceHolder) throws IOException {
+	void openDriver(SurfaceHolder surfaceHolder, boolean openFlashMode) throws IOException {
 		OpenCamera theOpenCamera = this.openCamera;
 		if (theOpenCamera == null) {
 			try {
@@ -68,14 +68,14 @@ class CameraManager implements Camera.PreviewCallback {
 		Camera.Parameters cameraParameters = theCamera.getParameters();
 		String parametersFlattened = cameraParameters == null ? null : cameraParameters.flatten();
 		try {
-			this.cameraConfigManager.setDesiredCameraParameters(theOpenCamera, false);
+			this.cameraConfigManager.setDesiredCameraParameters(theOpenCamera, openFlashMode, false);
 		} catch (RuntimeException re) {
 			if (parametersFlattened != null) {
 				cameraParameters = theCamera.getParameters();
 				cameraParameters.unflatten(parametersFlattened);
 				try {
 					theCamera.setParameters(cameraParameters);
-					this.cameraConfigManager.setDesiredCameraParameters(theOpenCamera, true);
+					this.cameraConfigManager.setDesiredCameraParameters(theOpenCamera, openFlashMode, true);
 				} catch (RuntimeException ignored) {
 				}
 			}
@@ -112,6 +112,21 @@ class CameraManager implements Camera.PreviewCallback {
 		}
 	}
 	
+	public void openFlashMode() {
+		if (this.openCamera != null) {
+			Camera.Parameters parameters = this.openCamera.getCamera().getParameters();
+			parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+			this.openCamera.getCamera().setParameters(parameters);
+		}
+	}
+	
+	public void closeFlashMode() {
+		if (this.openCamera != null) {
+			Camera.Parameters parameters = this.openCamera.getCamera().getParameters();
+			parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+			this.openCamera.getCamera().setParameters(parameters);
+		}
+	}
 	// @SuppressWarnings("SuspiciousNameCombination")
 	// Rect getFrameRect(ScanView scanView) {
 	// 	if (this.frameRect != null) {

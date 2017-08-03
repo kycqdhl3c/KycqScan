@@ -85,7 +85,7 @@ class CameraConfigManager {
 		}
 	}
 	
-	void setDesiredCameraParameters(OpenCamera openCamera, boolean safeMode) {
+	void setDesiredCameraParameters(OpenCamera openCamera,boolean openFlash, boolean safeMode) {
 		Camera theCamera = openCamera.getCamera();
 		Camera.Parameters cameraParameters = theCamera.getParameters();
 		if (cameraParameters == null) {
@@ -113,6 +113,11 @@ class CameraConfigManager {
 		}
 		
 		cameraParameters.setPreviewSize(this.cameraResolution.x, this.cameraResolution.y);
+		if (openFlash) {
+			cameraParameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+		} else {
+			cameraParameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+		}
 		
 		theCamera.setParameters(cameraParameters);
 		// 当前相机角度旋转度数

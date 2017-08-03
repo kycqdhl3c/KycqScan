@@ -26,6 +26,7 @@ public class ScanView extends FrameLayout implements SurfaceHolder.Callback {
 	
 	private boolean isSurfaced;
 	private CameraManager cameraManager;
+	private boolean openFlashMode;
 	
 	private CaptureHandler captureHandler;
 	private AlbumHandler albumHandler;
@@ -103,13 +104,31 @@ public class ScanView extends FrameLayout implements SurfaceHolder.Callback {
 		}
 	}
 	
+	public void openFlashMode() {
+		this.openFlashMode = true;
+		if (this.cameraManager != null) {
+			this.cameraManager.openFlashMode();
+		}
+	}
+	
+	public void closeFlashMode() {
+		this.openFlashMode = false;
+		if (this.cameraManager != null) {
+			this.cameraManager.closeFlashMode();
+		}
+	}
+	
+	public boolean isOpenFlashMode() {
+		return this.openFlashMode;
+	}
+	
 	private void initCamera(SurfaceHolder surfaceHolder) {
 		if (this.cameraManager.isOpened()) {
 			return;
 		}
 		
 		try {
-			this.cameraManager.openDriver(surfaceHolder);
+			this.cameraManager.openDriver(surfaceHolder, this.openFlashMode);
 			if (!this.cameraManager.isOpened()) {
 				return;
 			}
